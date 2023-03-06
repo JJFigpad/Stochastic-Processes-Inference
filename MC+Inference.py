@@ -7,7 +7,7 @@ Created on Sat Mar  4 12:04:26 2023
 """
 
 import numpy as np
-import matplotlib as mpl
+#import matplotlib as mpl
 
 class MarkovChain:
     """
@@ -76,6 +76,32 @@ class MarkovChain:
             arr.append(int(values[i]))
         return np.array(arr)
 
+    def stationary_dist(self, P, pi):
+        """
+        
+
+        Parameters
+        ----------
+        P : numpy matrix
+            Transition matrix of the Markov chain.
+        pi : numpy array
+            Initial distribution of the Markov chain.
+
+        Returns
+        -------
+        numpy array
+            Stationary distribution of the Markov chain.
+
+        """
+        
+        return np.matmul(pi, P)
+    
+    def expected_hitting_time(self, P, s1, s2):
+        
+        return 0
+
 mc = MarkovChain(2)
-#print(transitionMatrix(2, "2 4 6 8"))
-print(mc.init_dist("1 2"))
+mat = mc.transitionMatrix("2 4 6 8")
+vec = mc.init_dist("1 2")
+
+print(np.matmul(vec, mat))
