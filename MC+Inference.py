@@ -16,6 +16,8 @@ class F_MarkovChain:
     
     def __init__(self, n):
         self.n = n
+        self.M = None
+        self.initial_dist = None
 
     def __checkTM__(self, M):
         """
@@ -23,19 +25,20 @@ class F_MarkovChain:
 
         Parameters
         ----------
-        M : TYPE
-            DESCRIPTION.
+        M : numpy.ndarray
+            Transition matrix candidate.
 
         Returns
         -------
         bool
-            DESCRIPTION.
+            True if it is a valid transition matrix. False otherwise.
 
         """
         for row in M:
-            if sum(row) != 1:
+            if sum(row) == 1 or (1-sum(row)) < 1e-12:
+                return True
+            else:
                 return False
-        return True
 
     def transitionMatrix(self, L):
         """
@@ -43,8 +46,6 @@ class F_MarkovChain:
     
         Parameters
         ----------
-        n : int
-            size of square matrix.
         L : str
             String with all values of the nxn size matrix.
     
@@ -65,12 +66,14 @@ class F_MarkovChain:
         counter = 0
         for i in range(self.n):
             for j in range(self.n):
-                matrix[i].append(float(values[counter]))
+                matrix[i].append(eval(values[counter]))
                 counter += 1
         flag = self.__checkTM__(matrix)
         if not flag:
             return "The matrix given is not valid"
-        return np.array(matrix)
+        self.M = np.array(matrix)
+        return self.M
+
     
     def __checkID__(self, v):
         """
@@ -78,13 +81,13 @@ class F_MarkovChain:
 
         Parameters
         ----------
-        v : TYPE
-            DESCRIPTION.
+        v : numpy.ndarray
+            Initial distribution candidate.
 
         Returns
         -------
         bool
-            DESCRIPTION.
+            True if it is a valid initial distribution. False in other case.
 
         """
         if sum(v) != 1:
@@ -97,8 +100,6 @@ class F_MarkovChain:
     
         Parameters
         ----------
-        n : int
-            size of square matrix.
         L : str
             String with all values of the nxn size matrix.
     
@@ -119,16 +120,12 @@ class F_MarkovChain:
         flag = self.__checkID__(arr)
         if not flag:
             return "Invalid ID"
-        return np.array(arr)
+        self.initial_dist = np.array(arr)
+        return self.initial_dist
 
-    def stationary_dist(self, P):
+    def stationary_dist(self):
         """
         
-
-        Parameters
-        ----------
-        P : numpy matrix
-            Transition matrix of the Markov chain.
 
         Returns
         -------
@@ -138,30 +135,19 @@ class F_MarkovChain:
 
         """
         
-        n = P.shape[0]
-        P_new = np.column_stack((P, np.identity(n)))
-        for i in range(n):
-        # Find the row with the largest absolute value in the i-th column
-            max_row = i
-            for j in range(i+1, n):
-                if abs(P_new[j, i]) > abs(P_new[max_row, i]):
-                    max_row = j
-            # Swap the i-th and max_row-th rows
-            P_new[[i, max_row], :] = P_new[[max_row, i], :]
-            # Eliminate the i-th column below the i-th row
-            for j in range(i+1, n):
-                P_new[j, :] -= P_new[j, i]/P_new[i, i] * P_new[i, :]
-            # Divide the i-th row by the i-th diagonal element
-            P_new[i, :] /= P_new[i, i]    
-        return P_new[:,n:]
+        P = self.M.T - np.identity(self.n)
+        P = np.vstack(([1]*self.n, P))
+        P = np.delete(P, self.n, 0)
+        vec = np.array([0]*self.n)
+        vec[0] = 1
+        return np.linalg.solve(P, vec)
     
-    def expected_hitting_time(self, P, s1, s2):
-        
+    def expected_hitting_time(self, i, j):
         return 0
 
-mc = F_MarkovChain(2)
-mat = mc.transitionMatrix("0.2 0.8 .6 .4")
-vec = mc.init_dist(".1 .9")
-#print(vec)
-#print(np.matmul(vec, mat))
-print(mc.stationary_dist(mat))
+mc = F_MarkovChain(3)
+mat = mc.transitionMatrix("0 1 0 1 0 0 1/2 1/2 0")
+eh = mc.expected_hitting_time(2, 3)
+print(mat)
+print(mc.stationary_dist())
+print(eh)
