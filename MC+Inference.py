@@ -7,7 +7,7 @@ Created on Sat Mar  4 12:04:26 2023
 """
 
 import numpy as np
-#import matplotlib as mpl
+from matplotlib import pyplot as plt
 
 class F_MarkovChain:
     """
@@ -142,12 +142,75 @@ class F_MarkovChain:
         vec[0] = 1
         return np.linalg.solve(P, vec)
     
-    def expected_hitting_time(self, i, j):
+    def state_classification(self):
+        r = []
+        for k in range(1, self.n):
+            tempM = np.linalg.matrix_power(self.M, k)
+            acc = []
+            for i in range(self.n):
+                temp_classes = []
+                for j in range(self.n):
+                    if tempM[i, j] > 0 and tempM[j, i] > 0:
+                        if i not in temp_classes:
+                            temp_classes.append(i)
+                        if j not in temp_classes:
+                            temp_classes.append(j)
+                if temp_classes != []:
+                    acc.append(sorted(temp_classes))
+            if acc not in r:
+                r.append(acc)
+        c = 0
+        r1 = []
+        while c < len(r):
+            tempC = []
+            acc = []
+            for i in r:
+                tempC.append(i[c])
+            for i in tempC:
+                acc += i
+            acc = sorted(list(set(acc)))
+            c += 1
+            if acc not in r1:
+                r1.append(acc)
+        return r1
+    
+    def __fund_matrix__(self, Q):
+        """
+        
+
+        Parameters
+        ----------
+        Q : numpy.ndarray
+            Q matrix of the canonical form of the transition matrix.
+
+        Returns
+        -------
+        numpy.ndarray
+            Fundamental Matrix.
+
+        """
+        return np.linalg.inv(-Q + np.identity(len(Q)))
+    
+    def expected_hitting_time(self, i, j, Q):
+        classes = self.state_classification()
+        if len(classes) == 1:
+            return 1
+        fm = self.__fund_matrix__(Q)
+        
         return 0
 
 mc = F_MarkovChain(3)
 mat = mc.transitionMatrix("0 1 0 1 0 0 1/2 1/2 0")
-eh = mc.expected_hitting_time(2, 3)
 print(mat)
 print(mc.stationary_dist())
-print(eh)
+print(mc.state_classification())
+
+x = list(range(1, 31))
+y = []
+for i in range(1, 31):
+    y.append(np.linalg.matrix_power(mat, i)[2,0])
+plt.scatter(x, y)
+plt.legend(["p_20"])
+plt.xlabel("Number of steps")
+plt.ylabel("Transition probability in n steps")
+plt.show()
