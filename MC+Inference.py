@@ -6,6 +6,7 @@ Created on Sat Mar  4 12:04:26 2023
 @author: juanjose
 """
 
+import random
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -191,26 +192,40 @@ class F_MarkovChain:
         """
         return np.linalg.inv(-Q + np.identity(len(Q)))
     
-    def expected_hitting_time(self, i, j, Q):
-        classes = self.state_classification()
-        if len(classes) == 1:
-            return 1
-        fm = self.__fund_matrix__(Q)
-        
-        return 0
+    def expected_hitting_time(self, i, j):
+        return (1-self.M[i,j])/self.M[i,j]
+    
+    def runProcess(self, i, j):
+        choices = list(range(self.n))
+        T = 0
+        act_state = i
+        while act_state != j:
+            temp = random.choices(choices, weights=list(self.M[act_state]), k=1)[0]
+            T += 1
+            act_state = temp
+        return T
 
 mc = F_MarkovChain(3)
-mat = mc.transitionMatrix("0 1 0 1 0 0 1/2 1/2 0")
+mat = mc.transitionMatrix("0.2 0.2 0.6 0.3 0 0.7 0.3 0.3 0.4")
+ht = mc.expected_hitting_time(1, 0)
 print(mat)
 print(mc.stationary_dist())
 print(mc.state_classification())
+print(ht)
 
-x = list(range(1, 31))
+#Simulation
+x = list(range(1, 501))
 y = []
-for i in range(1, 31):
-    y.append(np.linalg.matrix_power(mat, i)[2,0])
+for i in range(1, 501):
+    s = []
+    for k in range(i):
+        s.append(mc.runProcess(1, 0))
+    p = 1/(1+(sum(s)/i))
+    y.append((1-p)/p - 1)
 plt.scatter(x, y)
-plt.legend(["p_20"])
-plt.xlabel("Number of steps")
+plt.plot(x, [ht]*500, color="red")
+plt.title("T_{ij} approximation")
+plt.legend(["T_02", "q/p"])
+plt.xlabel("Number of attempt")
 plt.ylabel("Transition probability in n steps")
 plt.show()
