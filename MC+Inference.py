@@ -214,18 +214,19 @@ print(mc.state_classification())
 print(ht)
 
 #Simulation
-x = list(range(1, 501))
+n = 500
+x = list(range(1, n+1))
 y = []
-for i in range(1, 501):
+for i in range(1, n+1):
     s = []
     for k in range(i):
-        s.append(mc.runProcess(1, 0))
+        s.append(mc.runProcess(0, 2))
     p = 1/(1+(sum(s)/i))
-    y.append((1-p)/p - 1)
+    y.append((1-p)/p)
 plt.scatter(x, y)
-plt.plot(x, [ht]*500, color="red")
-plt.title("T_{ij} approximation")
-plt.legend(["T_02", "q/p"])
+plt.plot(x, [ht]*n, color="red")
+plt.title("E[T_{ij}] approximation")
+plt.legend(["T_ij", "q/p"])
 plt.xlabel("Number of attempt")
-plt.ylabel("Transition probability in n steps")
+plt.ylabel("Expected value realization")
 plt.show()
