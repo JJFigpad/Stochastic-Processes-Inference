@@ -193,9 +193,41 @@ class F_MarkovChain:
         return np.linalg.inv(-Q + np.identity(len(Q)))
     
     def expected_hitting_time(self, i, j):
+        """
+        
+
+        Parameters
+        ----------
+        i : int
+            Initial state.
+        j : int
+            End state.
+
+        Returns
+        -------
+        float
+            T_{ij} assuming T has geometric dist of parameter p_{ij}.
+
+        """
         return (1-self.M[i,j])/self.M[i,j]
     
     def runProcess(self, i, j):
+        """
+        
+
+        Parameters
+        ----------
+        i : int
+            Initial state.
+        j : int
+            End state.
+
+        Returns
+        -------
+        T : int
+            actual state after one step between i-j states.
+
+        """
         choices = list(range(self.n))
         T = 0
         act_state = i
@@ -208,10 +240,9 @@ class F_MarkovChain:
 mc = F_MarkovChain(3)
 mat = mc.transitionMatrix("0.2 0.2 0.6 0.3 0 0.7 0.3 0.3 0.4")
 ht = mc.expected_hitting_time(1, 0)
-print(mat)
-print(mc.stationary_dist())
-print(mc.state_classification())
-print(ht)
+print("M =\n", mat)
+print("Dis. estacionaria: ", mc.stationary_dist())
+print("E[T_{ij} = ", ht, "[i = ", 1, ", j = ", 2, "]")
 
 #Simulation
 n = 500
@@ -221,8 +252,8 @@ for i in range(1, n+1):
     s = []
     for k in range(i):
         s.append(mc.runProcess(0, 2))
-    p = 1/(1+(sum(s)/i))
-    y.append((1-p)/p)
+    p = 1/(1+(sum(s)/i)) #Estimacion max-ver
+    y.append((1)/p)
 plt.scatter(x, y)
 plt.plot(x, [ht]*n, color="red")
 plt.title("E[T_{ij}] approximation")
