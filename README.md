@@ -61,16 +61,20 @@ Los códigos correspondientes al desarrollo de todos estos objetivos se encuentr
 Aquí se dejarán las gráficas y resultados obtenidos. Para conocer las entradas a detalle dirigirse al repositorio del código.
 
 1. Cadena de Markov Finita:
+
    ![FMC](FMC.png)
 
 2. Cadena de Markov en tiempo continuo:
+
    ![CMC](CMC.png)
 
 3. Proceso Poisson:
+
    ![PPT](PPT.png)
    ![PPS](PPS.png)
 
 4. Movimiento Browniano:
+
    ![B](B.png)
 
 ## Discusión Final
