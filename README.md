@@ -76,13 +76,3 @@ Aquí se dejarán las gráficas y resultados obtenidos. Para conocer las entrada
 4. Movimiento Browniano:
 
    ![B](B.png)
-
-## Discusión Final
-Para cerrar, este proyecto me deja una gran satisfacción en cada uno de los puntos.
-
-Todos los objetivos fueron alcanzados, y además se dejó todavía un mundo de posibilidades por abarcar. Pese a ser una idea sencilla, toda la teoría detrás que soporta lo hecho es tan compleja como rígida, que permite desplazarse entre conceptos con poca dificultad. Luego, apoyándose en la capacidad computacional el tiempo que se toma se vuelve casi inmediato para resolver cualquier cuestión. Para un futuro se podría pensar en expandir este proyecto, completándolo con pruebas y funciones más complejas y contundentes.
-
-Espero esto sea un ejemplo de cómo se puede llegar a dar o verificar afirmaciones acerca de un tema usando la capacidad computacional que se pueda tener a la mano y una idea clara de lo que se está buscando.
-
-\newpage
-\printbibliography
