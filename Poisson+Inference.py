@@ -11,6 +11,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 class Poisson_Process:
+    """
+    Class that represents a Poisson Process.
+    """
     
     def __init__(self, lam, t_end):
         self.lam = lam
@@ -154,11 +157,11 @@ class Poisson_Process:
         return r/n
 
 pp = Poisson_Process(0.5, 100)
-print(pp.sample(1))
+print("Sample = ", pp.sample(1))
 E_T = pp.E_T(10)
 E_S = pp.E_S(5)
-print(E_T)
-print(E_S)
+print("E[T] =", E_T)
+print("E[S] =", E_S)
 
 n = 500
 x = list(range(1, n+1))
@@ -178,8 +181,8 @@ for i in range(1, n+1):
     y.append(pp.simulation_S(i, 1, 5))
 plt.scatter(x, y)
 plt.plot(x, [E_S]*n, color="red")
-plt.title("E[T_i] approximation")
-plt.legend(["T_ij", "1/X_n"])
+plt.title("E[S_i] approximation")
+plt.legend(["S_ij", "n/X_n"])
 plt.xlabel("Number of attempt")
 plt.ylabel("Expected value realization")
 plt.show()
